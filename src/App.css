@@ -1,0 +1,29 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.app{
+  background-color: black;
+}
+
+ .ant-tabs-tab {
+  font-size: 18px; /* Tab yozuvlarini kattalashtirish */
+  font-weight: bold; /* Yozuvni qalin qilish */
+}
+
+.ant-tabs-tab.ant-tabs-tab-active {
+  color: black !important; /* Aktiv tabni qora qilish */
+  background-color: #f0f0f0 !important; /* Aktiv tabning fonini o'zgartirish */
+  font-weight: 900; /* Aktiv tabni yanada qalin qilish */
+  border-bottom: 3px solid #FE5B00; /* Aktiv tab ostida chiziq yaratish */
+}
+ .ant-tabs-tab:not(.ant-tabs-tab-active) {
+  color: gray; /* Aktiv bo'lmagan tablarni kulrang qilish */
+}
+
+ .ant-tabs-nav {
+  display: flex;
+  justify-content: space-between;
+}

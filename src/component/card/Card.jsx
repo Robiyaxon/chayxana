@@ -48,7 +48,7 @@ const Card = ({ data }) => {
     if (itemIndex > -1) {
       updatedItems[itemIndex].quantity += 1;
     } else {
-      updatedItems.push({ ...item, item_order: item?.id, quantity: 1 });
+      updatedItems.push({ ...item, item_order: item?.id, amount: item?.price, quantity: 1 });
     }
 
     localStorage.setItem("cart", JSON.stringify(updatedItems));
@@ -88,14 +88,14 @@ const Card = ({ data }) => {
 
   // Buyurtmani tasdiqlash
 
-  const p_type = window.location.href.split("=")[1].substring(0, 4);
-  const p_num = window.location.href.split("=")[2].substring(0, 4);
+  const p_type = window.location.href.split("=")[1]?.substring(0, 4);
+  const p_num = window.location.href.split("=")[2]?.substring(0, 4);
   const handleConfirmOrder = () => {
     // message.success("Buyurtmangiz qabul qilindi!");
     const getStorage = JSON.parse(localStorage.getItem("cart"));
     dispatch(
       createAction("order/", CREATE_ORDER, {
-        place: `${p_num}-${p_type.trim()}`,
+        place: `${p_num}-${p_type}`,
         items: getStorage,
       })
     )
@@ -149,7 +149,7 @@ const Card = ({ data }) => {
                     className={style.addButton}
                     onClick={() => handleAddToCart(item)}
                   >
-                    "Buyurtmaga qo'shish"
+                    Buyurtmaga qo'shish
                   </button>
                 )}
               </div>

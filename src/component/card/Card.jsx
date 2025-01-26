@@ -1,22 +1,37 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Drawer, message } from "antd";
 import style from "./Card.module.css";
-import { useAppDispatch, useAppSelector } from "../../redux/app/hooks";
-import { getAction } from "../../redux/actions/readAction";
-import { GET_PRODUCTS } from "../../redux/actions/types";
 
-const Card = () => {
+const Card = ({ data }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
-  const { data } = useAppSelector((state) => state?.products?.data);
-  const dispatch = useAppDispatch();
+  const [clickedItems, setClickedItems] = useState({});
 
-  useEffect(() => {
-    dispatch(getAction("get-catalog", GET_PRODUCTS));
-  }, [dispatch]);
-
+  const handleDecrement = (item) => {
+    setClickedItems((prevCounts) => {
+      const count = prevCounts[item.id] || 1;
+      if(!clickedItems[item.id] ||clickedItems[item.id] -1 == 0 || clickedItems[item.id] == 0) {
+        setSelectedItems ((prev) => ({ ...prev, [item.id]: false }));
+       }
+      return {
+        ...prevCounts,
+        [item.id]: count > 1 ? count - 1 : 1,
+      };
+    });
+    
+  };
+  const handleIncrement = (item) => {
+    setClickedItems((prevClickedItems) => {
+      const count = prevClickedItems[item.id] || 1;
+      return {
+        ...prevClickedItems,
+        [item.id]: count + 1,
+      };
+    });
+  };
   // Mahsulotni tanlash
   const handleAddToCart = (item) => {
+    console.log(item);
     const existingItems = JSON.parse(localStorage.getItem("cart")) || [];
     const updatedItems = [...existingItems];
 
@@ -28,7 +43,10 @@ const Card = () => {
     }
 
     localStorage.setItem("cart", JSON.stringify(updatedItems));
-    setSelectedItems(updatedItems);
+    setSelectedItems((prevClickedItems) => ({
+      ...prevClickedItems,
+      [item.id]: !prevClickedItems[item.id],
+    }));
   };
 
   // Miqdorni kamaytirish
@@ -47,6 +65,8 @@ const Card = () => {
 
     localStorage.setItem("cart", JSON.stringify(updatedItems));
     setSelectedItems(updatedItems);
+    // if()
+    console.log(itemIndex);
   };
 
   // Umumiy summa hisoblash
@@ -76,103 +96,122 @@ const Card = () => {
   const onClose = () => {
     setIsDrawerOpen(false);
   };
-
-  return (
-    <div className={style.container}>
-      <div className={style.wrapper}>
-        {data?.products.map((item) => (
-          <div className={style.card} key={item.id}>
-            <img src={'https://back-end.muvaffaqiyatsirlari.uz/'+ item.image} alt={item.title} />
-            <h1>{item.title}</h1>
-            <p>{item.price.toLocaleString("uz-UZ")} so‘m</p>
-            <div className={style.click}>
-              <button
-                className={style.addButton}
-                onClick={() => handleAddToCart(item)}
-              >
-                Buyurtmaga qo‘shish
-              </button>
+  if (!data) {
+    return <>Hozircha Maxsulot mavjud emas! </>;
+  } else {
+    console.log(selectedItems);
+    return (
+      <div className={style.container}>
+        <div className={style.wrapper}>
+          {data.map((item) => (
+            <div className={style.card} key={item.id}>
+              <img
+                src={"https://back-end.muvaffaqiyatsirlari.uz/" + item.image}
+                alt={item.title}
+              />
+              <h1>{item.title}</h1>
+              <p>{item?.price?.toLocaleString("uz-UZ")} so‘m</p>
+              <div className={style.click}>
+                {selectedItems[item.id] ? (
+                  <div className={style.counter}>
+                    <button onClick={() => handleDecrement(item)}>-</button>
+                    <span>{clickedItems[item.id] || 1}</span>
+                    <button onClick={() => handleIncrement(item)}>+</button>
+                  </div>
+                ) : (
+                  <button
+                    className={style.addButton}
+                    onClick={() => handleAddToCart(item)}
+                  >
+                    "Buyurtmaga qo'shish"
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
-      <button className={style.fixedButton} onClick={showDrawer}>
-        Buyurtmani tasdiqlash
-      </button>
+          ))}
+        </div>
+        <button className={style.fixedButton} onClick={showDrawer}>
+          Buyurtmani tasdiqlash
+        </button>
 
-      {/* Ant Design Drawer */}
-      <Drawer
-        title="Sizning buyurtmangiz"
-        placement="right"
-        onClose={onClose}
-        open={isDrawerOpen}
-        width="90%"
-      >
-        {selectedItems.length > 0 ? (
-          <div>
-            <ul>
-              {selectedItems.map((item) => (
-                <li
-                  key={item.id}
-                  className={style.choose}
-                  style={{
-                    marginBottom: "1rem",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <img
-                    src={item.img}
-                    alt={item.title}
-                    style={{ width: "50px", marginRight: "10px" }}
-                  />
-                  <div className={style.title_sum}>
-                    <div className={style.sum_mitti}>
-                      <span className={style.name} style={{ flexGrow: 1 }}>
-                        {item.title}
-                      </span>
-                      <span>{item.narxi.toLocaleString("uz-UZ")} so‘m</span>
-                    </div>
+        {/* Ant Design Drawer */}
+        <Drawer
+          title="Sizning buyurtmangiz"
+          placement="right"
+          onClose={onClose}
+          open={isDrawerOpen}
+          width="90%"
+        >
+          {selectedItems.length > 0 ? (
+            <div>
+              <ul>
+                {selectedItems.map((item) => (
+                  <li
+                    key={item.id}
+                    className={style.choose}
+                    style={{
+                      marginBottom: "1rem",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <img
+                      src={
+                        "https://back-end.muvaffaqiyatsirlari.uz/" + item.img
+                      }
+                      alt={item.title}
+                      style={{ width: "50px", marginRight: "10px" }}
+                    />
+                    <div className={style.title_sum}>
+                      <div className={style.sum_mitti}>
+                        <span className={style.name} style={{ flexGrow: 1 }}>
+                          {item.title}
+                        </span>
+                        <span>{item.price.toLocaleString("uz-UZ")} so‘m</span>
+                      </div>
 
-                    <div
-                      className={style.button_click}
-                      style={{ display: "flex", alignItems: "center" }}
-                    >
-                      <span className={style.quality}> {item.quantity}x</span>
+                      <div
+                        className={style.button_click}
+                        style={{ display: "flex", alignItems: "center" }}
+                      >
+                        <span className={style.quality}> {item.quantity}x</span>
 
-                      <div className={style.click_butons}>
-                        <button
-                          onClick={() => handleRemoveFromCart(item)}
-                          style={{ marginRight: "5px" }}
-                        >
-                          -
-                        </button>
-                        <button onClick={() => handleAddToCart(item)}>+</button>
+                        <div className={style.click_butons}>
+                          <button
+                            onClick={() => handleRemoveFromCart(item)}
+                            style={{ marginRight: "5px" }}
+                          >
+                            -
+                          </button>
+                          <button onClick={() => handleAddToCart(item)}>
+                            +
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <div className={style.result}>
-              <h4>Umumiy hisob </h4>
-              <h3>{calculateTotal().toLocaleString("uz-UZ")} so‘m</h3>
-            </div>
+                  </li>
+                ))}
+              </ul>
+              <div className={style.result}>
+                <h4>Umumiy hisob </h4>
+                <h3>{calculateTotal().toLocaleString("uz-UZ")} so‘m</h3>
+              </div>
 
-            <button
-              className={style.confirmButton}
-              style={{ marginTop: "1rem", padding: "10px 20px" }}
-              onClick={handleConfirmOrder}
-            >
-              Buyurtmani tasdiqlash
-            </button>
-          </div>
-        ) : (
-          <p>Buyurtma qo‘shilmagan!</p>
-        )}
-      </Drawer>
-    </div>
-  );
+              <button
+                className={style.confirmButton}
+                style={{ marginTop: "1rem", padding: "10px 20px" }}
+                onClick={handleConfirmOrder}
+              >
+                Buyurtmani tasdiqlash
+              </button>
+            </div>
+          ) : (
+            <p>Buyurtma qo‘shilmagan!</p>
+          )}
+        </Drawer>
+      </div>
+    );
+  }
 };
 
 export default Card;

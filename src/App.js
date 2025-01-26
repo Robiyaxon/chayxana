@@ -1,10 +1,10 @@
 import './App.css';
-import Home from './component/home/Home';
+// import Home from './component/home/Home';
 import FavooriteFood from './component/favorite/FavooriteFood';
 function App() {
   return (
    <div className='app'>
-    <Home/>
+    {/* <Home/> */}
     <FavooriteFood/>
    </div>
   );

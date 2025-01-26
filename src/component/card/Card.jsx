@@ -13,86 +13,73 @@ const Card = ({ data }) => {
 
   const dispatch = useAppDispatch();
 
-  const handleDecrement = (item) => {
-    setClickedItems((prevCounts) => {
-      const count = prevCounts[item.id] || 1;
-      if (
-        !clickedItems[item.id] ||
-        clickedItems[item.id] - 1 == 0 ||
-        clickedItems[item.id] == 0
-      ) {
-        setSelectedItems((prev) => ({ ...prev, [item.id]: false }));
-      }
-      return {
-        ...prevCounts,
-        [item.id]: count > 1 ? count - 1 : 1,
-      };
-    });
-  };
   const handleIncrement = (item) => {
-    setClickedItems((prevClickedItems) => {
-      const count = prevClickedItems[item.id] || 1;
-      return {
-        ...prevClickedItems,
-        [item.id]: count + 1,
-      };
-    });
-  };
-  // Mahsulotni tanlash
-  const handleAddToCart = (item) => {
-    console.log(item);
     const existingItems = JSON.parse(localStorage.getItem("cart")) || [];
-    const updatedItems = [...existingItems];
-
-    const itemIndex = updatedItems.findIndex((i) => i.id === item.id);
-    if (itemIndex > -1) {
-      updatedItems[itemIndex].quantity += 1;
-    } else {
-      updatedItems.push({ ...item, item_order: item?.id, amount: item?.price, quantity: 1 });
-    }
-
+    const updatedItems = existingItems.map((cartItem) => {
+      if (cartItem.id === item.id) {
+        cartItem.quantity += 1;
+      }
+      return cartItem;
+    });
     localStorage.setItem("cart", JSON.stringify(updatedItems));
-    setSelectedItems((prevClickedItems) => ({
-      ...prevClickedItems,
-      [item.id]: !prevClickedItems[item.id],
+    setSelectedItems(updatedItems);
+    setClickedItems((prev) => ({
+      ...prev,
+      [item.id]: (prev[item.id] || 0) + 1,
     }));
   };
 
-  // Miqdorni kamaytirish
-  const handleRemoveFromCart = (item) => {
+  const handleDecrement = (item) => {
     const existingItems = JSON.parse(localStorage.getItem("cart")) || [];
-    const updatedItems = [...existingItems];
-
-    const itemIndex = updatedItems.findIndex((i) => i.id === item.id);
-    if (itemIndex > -1) {
-      if (updatedItems[itemIndex].quantity > 1) {
-        updatedItems[itemIndex].quantity -= 1;
-      } else {
-        updatedItems.splice(itemIndex, 1);
-      }
-    }
+    const updatedItems = existingItems
+      .map((cartItem) => {
+        if (cartItem.id === item.id) {
+          cartItem.quantity -= 1;
+        }
+        return cartItem;
+      })
+      .filter((cartItem) => cartItem.quantity > 0);
 
     localStorage.setItem("cart", JSON.stringify(updatedItems));
     setSelectedItems(updatedItems);
-    // if()
-    console.log(itemIndex);
+    setClickedItems((prev) => ({
+      ...prev,
+      [item.id]: Math.max((prev[item.id] || 1) - 1, 0),
+    }));
   };
 
-  // Umumiy summa hisoblash
+  const handleAddToCart = (item) => {
+    const existingItems = JSON.parse(localStorage.getItem("cart")) || [];
+    const itemIndex = existingItems.findIndex((cartItem) => cartItem.id === item.id);
+
+    if (itemIndex > -1) {
+      existingItems[itemIndex].quantity += 1;
+    } else {
+      existingItems.push({
+        ...item,
+        item_order: item?.id,
+        amount: item?.price,
+        quantity: 1,
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(existingItems));
+    setSelectedItems(existingItems);
+    setClickedItems((prev) => ({
+      ...prev,
+      [item.id]: (prev[item.id] || 0) + 1,
+    }));
+  };
+
   const calculateTotal = () => {
-    return selectedItems.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
+    return selectedItems.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
-  // Buyurtmani tasdiqlash
-
-  const p_type = window.location.href.split("=")[1]?.substring(0, 4);
-  const p_num = window.location.href.split("=")[2]?.substring(0, 4);
   const handleConfirmOrder = () => {
-    // message.success("Buyurtmangiz qabul qilindi!");
     const getStorage = JSON.parse(localStorage.getItem("cart"));
+    const p_type = window.location.href.split("=")[1]?.substring(0, 4);
+    const p_num = window.location.href.split("=")[2]?.substring(0, 4);
+
     dispatch(
       createAction("order/", CREATE_ORDER, {
         place: `${p_num}-${p_type}`,
@@ -111,21 +98,19 @@ const Card = ({ data }) => {
       });
   };
 
-  // Drawer’ni ochish
   const showDrawer = () => {
     const itemsFromStorage = JSON.parse(localStorage.getItem("cart")) || [];
     setSelectedItems(itemsFromStorage);
     setIsDrawerOpen(true);
   };
 
-  // Drawer’ni yopish
   const onClose = () => {
     setIsDrawerOpen(false);
   };
+
   if (!data) {
     return <>Hozircha Maxsulot mavjud emas! </>;
   } else {
-    console.log(selectedItems);
     return (
       <div className={style.container}>
         <div className={style.wrapper}>
@@ -138,10 +123,12 @@ const Card = ({ data }) => {
               <h1>{item.title}</h1>
               <p>{item?.price?.toLocaleString("uz-UZ")} so‘m</p>
               <div className={style.click}>
-                {selectedItems[item.id] ? (
+                {selectedItems.some((cartItem) => cartItem.id === item.id) ? (
                   <div className={style.counter}>
                     <button onClick={() => handleDecrement(item)}>-</button>
-                    <span>{clickedItems[item.id] || 1}</span>
+                    <span>{
+                      selectedItems.find((cartItem) => cartItem.id === item.id)?.quantity || 1
+                    }</span>
                     <button onClick={() => handleIncrement(item)}>+</button>
                   </div>
                 ) : (
@@ -160,7 +147,6 @@ const Card = ({ data }) => {
           Buyurtmani tasdiqlash
         </button>
 
-        {/* Ant Design Drawer */}
         <Drawer
           title="Sizning buyurtmangiz"
           placement="right"
@@ -204,12 +190,12 @@ const Card = ({ data }) => {
 
                         <div className={style.click_butons}>
                           <button
-                            onClick={() => handleRemoveFromCart(item)}
+                            onClick={() => handleDecrement(item)}
                             style={{ marginRight: "5px" }}
                           >
                             -
                           </button>
-                          <button onClick={() => handleAddToCart(item)}>
+                          <button onClick={() => handleIncrement(item)}>
                             +
                           </button>
                         </div>

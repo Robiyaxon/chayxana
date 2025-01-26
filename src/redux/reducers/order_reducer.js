@@ -1,29 +1,29 @@
-import { CREATE_CATEGORY, DELETE_CATEGORY, GET_CATEGORY, UPDATE_CATEGORY } from '../actions/types';
+import { CREATE_ORDER, DELETE_ORDER, GET_ORDER, UPDATE_ORDER } from '../actions/types';
 
 const initialState = {
   data: [],
 };
 
-const CategoryReducer = (state = initialState, action) => {
+const OrderReducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
-    case GET_CATEGORY:
+    case GET_ORDER:
       return {
         ...state,
         data: payload
       };
-    case UPDATE_CATEGORY:
+    case UPDATE_ORDER:
       return {
         ...state,
         data: payload
       };
-    case DELETE_CATEGORY:
+    case DELETE_ORDER:
       return {
         ...state,
         data: payload
       };
-      case CREATE_CATEGORY:
+      case CREATE_ORDER:
         return {
           ...state,
           data: payload
@@ -33,4 +33,4 @@ const CategoryReducer = (state = initialState, action) => {
   }
 };
 
-export default CategoryReducer;
+export default OrderReducer;

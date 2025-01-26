@@ -9,19 +9,19 @@ export const CLEAR_STORE = 'CLEAR_STORE';
 
 // read actions
 export const GET_PRODUCTS = 'GET_PRODUCTS';
-export const GET_CATEGORY = 'GET_CATEGORY';
+export const GET_ORDER = 'GET_ORDER';
 
 
 //create actions
 export const CREATE_PRODUCTS = 'CREATE_PRODUCTS';
-export const CREATE_CATEGORY = 'CREATE_CATEGORY';
+export const CREATE_ORDER = 'CREATE_ORDER';
 
 
 // delete actions
 export const DELETE_PRODUCTS = 'DELETE_PRODUCTS';
-export const DELETE_CATEGORY = 'DELETE_CATEGORY';
+export const DELETE_ORDER = 'DELETE_ORDER';
 
 
 // update actions
 export const UPDATE_PRODUCTS = 'UPDATE_PRODUCTS';
-export const UPDATE_CATEGORY = 'UPDATE_CATEGORY';
+export const UPDATE_ORDER = 'UPDATE_ORDER';

@@ -1,24 +1,33 @@
 import React, { useState } from "react";
-import { Drawer, message } from "antd";
+import { Drawer } from "antd";
 import style from "./Card.module.css";
+import { useAppDispatch } from "../../redux/app/hooks";
+import { CREATE_ORDER } from "../../redux/actions/types";
+import toast from "react-hot-toast";
+import { createAction } from "../../redux/actions/createAction";
 
 const Card = ({ data }) => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState([]);
   const [clickedItems, setClickedItems] = useState({});
 
+  const dispatch = useAppDispatch();
+
   const handleDecrement = (item) => {
     setClickedItems((prevCounts) => {
       const count = prevCounts[item.id] || 1;
-      if(!clickedItems[item.id] ||clickedItems[item.id] -1 == 0 || clickedItems[item.id] == 0) {
-        setSelectedItems ((prev) => ({ ...prev, [item.id]: false }));
-       }
+      if (
+        !clickedItems[item.id] ||
+        clickedItems[item.id] - 1 == 0 ||
+        clickedItems[item.id] == 0
+      ) {
+        setSelectedItems((prev) => ({ ...prev, [item.id]: false }));
+      }
       return {
         ...prevCounts,
         [item.id]: count > 1 ? count - 1 : 1,
       };
     });
-    
   };
   const handleIncrement = (item) => {
     setClickedItems((prevClickedItems) => {
@@ -39,7 +48,7 @@ const Card = ({ data }) => {
     if (itemIndex > -1) {
       updatedItems[itemIndex].quantity += 1;
     } else {
-      updatedItems.push({ ...item, quantity: 1 });
+      updatedItems.push({ ...item, item_order: item?.id, quantity: 1 });
     }
 
     localStorage.setItem("cart", JSON.stringify(updatedItems));
@@ -72,17 +81,34 @@ const Card = ({ data }) => {
   // Umumiy summa hisoblash
   const calculateTotal = () => {
     return selectedItems.reduce(
-      (total, item) => total + item.narxi * item.quantity,
+      (total, item) => total + item.price * item.quantity,
       0
     );
   };
 
   // Buyurtmani tasdiqlash
+
+  const p_type = window.location.href.split("=")[1].substring(0, 4);
+  const p_num = window.location.href.split("=")[2].substring(0, 4);
   const handleConfirmOrder = () => {
-    message.success("Buyurtmangiz qabul qilindi!");
-    localStorage.removeItem("cart");
-    setSelectedItems([]);
-    setIsDrawerOpen(false);
+    // message.success("Buyurtmangiz qabul qilindi!");
+    const getStorage = JSON.parse(localStorage.getItem("cart"));
+    dispatch(
+      createAction("order/", CREATE_ORDER, {
+        place: `${p_num}-${p_type.trim()}`,
+        items: getStorage,
+      })
+    )
+      .then(() => {
+        toast.success("Mahsulot muvaffaqiyatli yaratildi!");
+        localStorage.removeItem("cart");
+        setSelectedItems([]);
+        setIsDrawerOpen(false);
+      })
+      .catch((error) => {
+        toast.error("Mahsulotni yaratishda xatolik yuz berdi");
+        console.error("Xato:", error);
+      });
   };
 
   // Drawer’ni ochish
@@ -157,7 +183,7 @@ const Card = ({ data }) => {
                   >
                     <img
                       src={
-                        "https://back-end.muvaffaqiyatsirlari.uz/" + item.img
+                        "https://back-end.muvaffaqiyatsirlari.uz/" + item.image
                       }
                       alt={item.title}
                       style={{ width: "50px", marginRight: "10px" }}

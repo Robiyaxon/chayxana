@@ -28,3 +28,10 @@
   display: flex;
   justify-content: space-between;
 }
+
+.wrapper {
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  background-color: white;
+  padding: 25px;
+}

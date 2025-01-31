@@ -8,9 +8,9 @@ import { getAction } from "../../redux/actions/readAction";
 
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const items = [];
     const { data } = useAppSelector((state) => state?.products?.data);
     const dispatch = useAppDispatch();
-  const items = [];
 
     
     useEffect(() => {

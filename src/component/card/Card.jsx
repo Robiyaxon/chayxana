@@ -88,8 +88,8 @@ const Card = ({ data }) => {
 
   // Buyurtmani tasdiqlash
 
-  const p_type = window.location.href.split("=")[1].substring(0, 4);
-  const p_num = window.location.href.split("=")[2].substring(0, 4);
+  const p_type = window.location.href.split("=")[1]?.substring(0, 4);
+  const p_num = window.location.href.split("=")[2]?.substring(0, 4);
   const handleConfirmOrder = () => {
     // message.success("Buyurtmangiz qabul qilindi!");
     const getStorage = JSON.parse(localStorage.getItem("cart"));

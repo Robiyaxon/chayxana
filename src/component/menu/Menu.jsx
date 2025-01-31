@@ -6,16 +6,10 @@ import { useAppDispatch, useAppSelector } from "../../redux/app/hooks";
 import { GET_PRODUCTS } from "../../redux/actions/types";
 import { getAction } from "../../redux/actions/readAction";
 
-const Menu = () => {
+const Menu = ({data}) => {
   const [isF_Product, setF_Product] = useState([]);
   const [isFilter, setIsFilter] = useState(false);
 
-  const { data } = useAppSelector((state) => state?.products?.data);
-  const dispatch = useAppDispatch();
-  
-  useEffect(() => {
-    dispatch(getAction("get-catalog", GET_PRODUCTS));
-  }, [isF_Product, dispatch]);
 
   const onChange = (key) => {
     setIsFilter(true);

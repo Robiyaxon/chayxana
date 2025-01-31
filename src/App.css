@@ -35,3 +35,44 @@
 .ant-tabs-tab-btn{
   text-transform: capitalize;
 }
+
+
+.preloader {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: #FE5B00;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.logo {
+  width: 150px;
+  animation: scaleFade 2s ease-in-out infinite alternate;
+}
+
+@keyframes scaleFade {
+  from {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+.content {
+  text-align: center;
+  padding: 50px;
+}

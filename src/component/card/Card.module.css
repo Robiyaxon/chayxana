@@ -1,7 +1,7 @@
 /* Karta konteyneri */
 .container {
     position: relative;
-    padding-bottom: 80px;
+    padding-bottom: 30px;
     /* Tugma uchun joy */
 }
 
@@ -47,6 +47,8 @@
 
 .card img {
     width: 100%;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
 }
 
 .card h1 {
@@ -75,6 +77,11 @@
     cursor: pointer;
 }
 
+.choose img{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
 @media (min-width: 0) and (max-width: 500.9px) {
     .card {
         width: 100%;
@@ -82,13 +89,14 @@
     }
 
     .card h1 {
-        font-size: 13px;
+        font-size: 15px;
         margin: 15px;
         line-height: 13px;
+        text-transform: capitalize;
     }
 
     .card p {
-        margin: 15px;
+        margin: 15px 15px 0 15px;
         font-size: 13px;
         line-height: 13px;
     }
@@ -192,9 +200,9 @@
 
 .result {
     background: #9A9A9A33;
-    padding: 27px 20px;
+    padding: 20px 20px;
     text-align: center;
-    border-radius: 30px;
+    border-radius: 20px;
 }
 
 .result h4 {
@@ -215,4 +223,5 @@
     background: #FE5B00;
     color: white;
     border: none;
+    cursor: pointer;
 }

@@ -11,13 +11,28 @@ import { Input, List } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 
 import style from './component/home/Home.module.css'
+import img from './assert/logo.png'
 import React from "react";
-
+const Preloader = () => {
+  return (
+    <div className="preloader fade-out">
+      <img src={img} alt="Logo" className="logo" />
+    </div>
+  );
+};
 function App() {
   // const [searchTerm, setSearchTerm] = useState("");
   const [items, setItems] = useState([]);
   // const items = [];
   
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3500);
+    return () => clearTimeout(timer);
+  }, []);
   const { data } = useAppSelector((state) => state?.products?.data);
   const dispatch = useAppDispatch();
   
@@ -40,6 +55,8 @@ function App() {
   // const filteredItems = items.filter((item) =>
   //   item.toLowerCase().includes(searchTerm)
   // );
+
+  
   return (
     <BrowserRouter>
       <div className="app">
@@ -63,10 +80,14 @@ function App() {
       </div>
     </div>
      */}
+           {loading ? <Preloader /> : <>  <div className='app'>
+
         <div className={"wrapper"}>
           <FavooriteFood />
           <Menu />
+
         </div>
+        </div>  </>}
       </div>
     </BrowserRouter>
   );

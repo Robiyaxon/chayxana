@@ -17,8 +17,8 @@
 .ant-tabs-tab.ant-tabs-tab-active {
   color: black !important; /* Aktiv tabni qora qilish */
   background-color: #f0f0f0 !important; /* Aktiv tabning fonini o'zgartirish */
-  font-weight: 900; /* Aktiv tabni yanada qalin qilish */
-  border-bottom: 3px solid #FE5B00; /* Aktiv tab ostida chiziq yaratish */
+  font-weight: 700; /* Aktiv tabni yanada qalin qilish */
+  border-bottom: none; /* Aktiv tab ostida chiziq yaratish */
 }
  .ant-tabs-tab:not(.ant-tabs-tab-active) {
   color: gray; /* Aktiv bo'lmagan tablarni kulrang qilish */
@@ -34,4 +34,52 @@
   border-top-right-radius: 30px;
   background-color: white;
   padding: 25px;
+}
+.ant-tabs-tab-active .ant-tabs-tab-btn{
+  color: #fe5b00 !important;
+
+}
+.ant-tabs-tab-btn{
+  text-transform: capitalize;
+}
+
+
+.preloader {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: #FE5B00;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.logo {
+  width: 150px;
+  animation: scaleFade 2s ease-in-out infinite alternate;
+}
+
+@keyframes scaleFade {
+  from {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+.content {
+  text-align: center;
+  padding: 50px;
 }

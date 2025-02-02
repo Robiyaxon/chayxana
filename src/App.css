@@ -4,9 +4,8 @@
   box-sizing: border-box;
 }
 
-.app{
+body{
   background-color: black;
-  padding-top: 25px;
 }
 
  .ant-tabs-tab {
@@ -58,6 +57,11 @@
 .logo {
   width: 150px;
   animation: scaleFade 2s ease-in-out infinite alternate;
+}
+
+.ant-input-affix-wrapper{
+  width: 80%;
+  margin: 0 auto;
 }
 
 @keyframes scaleFade {

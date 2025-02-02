@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://back-end.muvaffaqiyatsirlari.uz/",
+  baseURL: "https://asaloft.uz/",
   headers: {
     "Content-Type": "application/json",
   },

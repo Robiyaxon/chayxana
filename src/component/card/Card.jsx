@@ -118,7 +118,7 @@ const Card = ({ data }) => {
           {data.map((item) => (
             <div className={style.card} key={item.id}>
               <img
-                src={"https://back-end.muvaffaqiyatsirlari.uz/" + item.image}
+                src={"https://asaloft.uz/" + item.image}
                 alt={item.title}
               />
               <h1>{item.title}</h1>

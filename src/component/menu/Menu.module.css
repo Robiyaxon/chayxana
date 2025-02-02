@@ -1,11 +1,29 @@
 .wrapper{
+    border-radius: 20px;
     margin-top: 24px;
+    background: white;
+    padding: 20px;
 }
 
-.wrapper {
+.tap {
     /* Tab konteynerini yaxshiroq ko'rinishi uchun */
     padding: 20px;
   }
-  
  
-  
+  .header h2 {
+    margin-top: 1rem;
+    color: white;
+    text-align: center;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 20px;
+
+    margin-bottom: 1.5rem;
+}
+
+.inp{
+    /* width: 80%;- */
+    display: flex;
+    justify-content: center;
+    /* margin-top: 4rem; */
+}

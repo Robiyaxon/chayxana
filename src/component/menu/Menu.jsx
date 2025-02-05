@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import style from "./Menu.module.css";
-import { Input, Tabs } from "antd"; // ✅ Tabs import qilindi
+import { Input, Tabs } from "antd";
 import Card from "../card/Card";
 import { useAppDispatch, useAppSelector } from "../../redux/app/hooks";
 import { GET_PRODUCTS } from "../../redux/actions/types";
@@ -22,7 +22,7 @@ const Menu = () => {
   const onChange = (key) => {
     setIsFilter(true);
     if (!data?.products.filter((product) => product.category === key).length) {
-      setF_Product(data?.product);
+      setF_Product([]);
     } else {
       setF_Product(
         data?.products.filter((product) => product.category === key)
@@ -75,6 +75,7 @@ const Menu = () => {
       </div>
 
       <div className={style.wrapper}>
+        {/* Qidiruv holatida FavooriteFood va Tabs ko'rinmaydi */}
         {searchTerm.length === 0 && <FavooriteFood />}
         {searchTerm.length === 0 && (
           <div className={style.tap}>
@@ -87,7 +88,18 @@ const Menu = () => {
           </div>
         )}
 
-        {isFilter ? <Card data={isF_Product} /> : <Card data={data?.products} />}
+        {/* Qidiruv natijasi bo'yicha */}
+        {isFilter ? (
+          isF_Product.length > 0 ? (
+            <Card data={isF_Product} />
+          ) : (
+            <p style={{ textAlign: "center", fontSize: "18px", marginTop: "20px" }}>
+              Siz qidirgan ovqat menyuyimizda yo'q
+            </p>
+          )
+        ) : (
+          <Card data={data?.products} />
+        )}
       </div>
     </>
   );
